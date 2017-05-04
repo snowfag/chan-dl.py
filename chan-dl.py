@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import requests, re, os, time, signal, sys, argparse
 tl = os.path.expanduser("~") + '/.threadlist'
 parser = argparse.ArgumentParser(description='4chan thread image downloader.')
@@ -15,7 +15,7 @@ def signal_handler(signal, frame):
 signal.signal(signal.SIGINT, signal_handler)
 def get_file(url, filename):
   if not os.path.exists(filename):
-    print 'Downloading to ' + filename + '...'
+    print('Downloading to {} ...'.format(filename))
     r = requests.get(url, stream=True)
     with open(filename, 'wb') as fd:
       try:
@@ -43,7 +43,7 @@ def delete(argurl, reurl):
           threadlist = open(tl, 'a')
           threadlist.write(thread)
           threadlist.close()
-      print('Removed ' + argurl + ' from thread list.')
+      print('Removed {} from thread list.'.format(argurl))
     else:
       print('Thread isn\'t already in thread list.')
       sys.exit(1)
@@ -63,7 +63,7 @@ if args.add:
     threadlist = open(tl, 'a')
     threadlist.write(argurl + '\n')
     threadlist.close()
-    print('Added ' + argurl + ' to the thread list.')
+    print('Added {} to the thread list.'.format(argurl))
     sys.exit(0)
 if args.delete:
   argurl = ''.join(args.delete)
@@ -101,7 +101,7 @@ if args.start:
               downdir = ''.join(args.prefix) + '/' + reurl.match(url).group(1) + reurl.match(url).group(2) + '/'
               if not os.path.exists(downdir):
                 os.makedirs(downdir)
-              imageurls = list(set(re.findall(r'(?:https?:)?(?://)?(?:i.4cdn|is[0-9]?.4chan).org/./[0-9]{13}\.(?:jpg|jpeg|gif|png|webm)', requests.get(url).content)))
+              imageurls = list(set(re.findall(r'(?:https?:)?(?://)?(?:i.4cdn|is[0-9]?.4chan).org/./[0-9]{13}\.(?:jpg|jpeg|gif|png|webm)', requests.get(url).text)))
               for imageurl in imageurls:
                 imageurl = 'https:' + imageurl
                 filename = downdir + reimg.match(imageurl).group(1)
